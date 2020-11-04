@@ -15,7 +15,6 @@
   "devDependencies": {
     "atob": "^2.1.2",
     "btoa": "^1.2.1",
-    "faunadb": "^3.0.1",
-    "node-fetch": "^2.6.1"
+    "faunadb": "^3.0.1"
   }
 }
