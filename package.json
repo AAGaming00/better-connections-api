@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "preinstall": "yarn set version berry"
+    "start": "next start"
   },
   "dependencies": {
     "next": "10.0.0",
