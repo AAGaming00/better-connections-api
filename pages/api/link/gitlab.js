@@ -1,6 +1,5 @@
 import verify from '../../../util/verify';
-import btoa from 'btoa';
-import atob from 'atob';
+import { encrypt, decrypt } from '../../../util/crypto';
 import { update, delkey } from '../../../util/fauna';
 export default async function (req, res, user, token) {
     if (!user && !req.query.state) {
@@ -8,9 +7,10 @@ export default async function (req, res, user, token) {
       await (await import('../auth')).default(req, res)
     }
     else if (!req.query.code && user.id) {
-        res.redirect(`https://gitlab.com/oauth/authorize?client_id=${process.env.GITLAB_ID}&redirect_uri=${encodeURIComponent(`${process.env.URL}/api/link/gitlab`)}&response_type=code&state=${btoa(JSON.stringify({...user, token, delete: req.query.delete}))}&scope=read_user`)
+        res.redirect(`https://gitlab.com/oauth/authorize?client_id=${process.env.GITLAB_ID}&redirect_uri=${encodeURIComponent(`${process.env.URL}/api/link/gitlab`)}&response_type=code&state=${encodeURIComponent(encrypt(JSON.stringify({...user, token, delete: req.query.delete})))}&scope=read_user`)
     } else {
-      const discord = JSON.parse(atob(req.query.state))
+      console.log(req.query.state)
+      const discord = JSON.parse(decrypt(decodeURIComponent(req.query.state)))
       if (await verify(discord)) {
         // console.log(discord)
       if (!discord.delete) {
