@@ -40,7 +40,7 @@ export default async function (req, res, user, token) {
       const codereq = await oAuthToUUID(reqjson.token)
       if (codereq.status === 'fail') res.status(400)
       if (codereq.username) {
-         await update(discord.id, { minecraft: { name: user.username, verified: true, type:'minecraft'}, id: discord.id }, 'connections');
+         await update(discord.id, { minecraft: { name: codereq.username, verified: true, type:'minecraft'}, id: discord.id }, 'connections');
       }
       res.json(codereq)
    }
