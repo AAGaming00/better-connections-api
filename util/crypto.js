@@ -7,20 +7,22 @@ const IV = Buffer.from(process.env.IV, 'hex'); // set random initialisation vect
 // ENC_KEY and IV can be generated as crypto.randomBytes(32).toString('hex');
 
 
-export function encrypt(val) {
+export function encrypt(val, url = true) {
   let cipher = crypto.createCipheriv('aes-256-cbc', ENC_KEY, IV);
-  return Buffer.concat([
+  const buf = Buffer.concat([
     cipher.update(val),
     cipher.final()
-  ]).toString('base64') // Output base64 string
+  ])
+  return url ? encodeURIComponent(buf.toString('base64')) : buf.toString('base64') // Output base64 string
 };
 
-export function decrypt(encrypted) {
+export function decrypt(encrypted, url = true) {
   let decipher = crypto.createDecipheriv('aes-256-cbc', ENC_KEY, IV);
-  return Buffer.concat([
+  const buf =  Buffer.concat([
     decipher.update(encrypted, 'base64'), // Expect `text` to be a base64 string
     decipher.final()
-  ]).toString()
+  ])
+  return url ? decodeURIComponent(buf.toString()) : buf.toString()
 };
 
 // star this gist if you found it useful

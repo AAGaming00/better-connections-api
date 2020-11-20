@@ -1,0 +1,81 @@
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    gap: 80px;
+}
+
+.codeInput input {
+    appearance: none;
+    -moz-appearance: textfield;
+}
+
+.srv {
+    border-radius: 5px;
+    padding: 5px;
+    color: rgb(232, 230, 227);
+    background-color: rgb(31, 35, 42);
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.buttonInner {
+    transition: width 1s cubic-bezier(0, 0.55, 0.45, 1);
+    width: 68px;
+    white-space: nowrap;
+    overflow: hidden;
+    min-height: 24.5px;
+}
+
+.buttonBig {
+    animation: fadein 900ms cubic-bezier(0, 0.55, 0.45, 1) forwards;
+    animation-delay: 650ms;
+    opacity: 0;
+    overflow: visible;
+}
+
+.buttonProgress {
+    color: rgba(green, 0.5);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -12px;
+    margin-left: -12px;
+}
+
+.buttonSuccess {
+    background-color: rgba(green, 0.7) !important;
+    color: white !important;
+}
+
+.buttonError {
+    background-color: rgba(red, 0.7) !important;
+    color: rgba(black, 0.7) !important;
+}
+
+.form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    flex-basis: 30%;
+    gap: 10px;
+    //min-width: 100px;
+    max-width: 100px;
+}
