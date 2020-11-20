@@ -90,9 +90,9 @@ export default function MinecraftLinkPage() {
                 >
                 <div className = {clsx(
                   styles.buttonInner,
-                  status.status === 'error' && styles.buttonBig,
+                  (status.status === 'error' || status.status === 'success') && styles.buttonBig,
                   )}
-                  style = {status.status === 'error' ? {width: `${status.message.length * 7 + 30}px`} : {}}
+                  style = {(status.status === 'error' || status.status === 'success') ? {width: `${status.message.length * 7 + 30}px`} : {}}
                 >
                   {status.message}
                   {status.status === 'loading' && <CircularProgress size={24} className = {styles.buttonProgress} color="inherit"/>}
