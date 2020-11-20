@@ -29,8 +29,9 @@ export default async function (req, res, user, token) {
       return
    } if (req.method === 'POST') {
       const reqjson = JSON.parse(req.body)
+      let discord;
       try {
-         const discord = JSON.parse(decrypt(reqjson.state))
+         discord = JSON.parse(decrypt(reqjson.state))
          await verify(discord)
       } catch (e) {
          res.status(403).json({status: 'fail', message: 'Unauthorized'})//'Unauthorized'})
