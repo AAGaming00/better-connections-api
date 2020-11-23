@@ -15,7 +15,13 @@ function oAuthToUUID(token) {
 
 export default async function (req, res, user, token) {
    if (req.method === 'GET') {
-      if (req.query.delete) {
+      if (req.query.delete && user) {
+         try {
+            await verify({...user, token})
+         } catch (e) {
+            res.status(403).json({status: 'fail', message: 'Unauthorized'})//'Unauthorized'})
+            return
+         }
          await delkey(discord.id, 'minecraft', 'connections');
          res.send('done')
          return
