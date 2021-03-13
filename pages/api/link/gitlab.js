@@ -7,8 +7,21 @@ export default async function (req, res, user, token) {
       await (await import('../auth')).default(req, res)
       return
     }
-    if (!req.query.code && user.id) {
+    if (!req.query.code && user.id && !req.query.delete) {
       res.redirect(`https://gitlab.com/oauth/authorize?client_id=${process.env.GITLAB_ID}&redirect_uri=${encodeURIComponent(`${process.env.URL}/api/link/gitlab`)}&response_type=code&state=${encrypt(JSON.stringify({...user, token, delete: req.query.delete}))}&scope=read_user`)
+      return
+    }
+    if (req.query.delete) {
+      let discord;
+      try {
+        discord = JSON.parse(decrypt(req.query.state))
+        await verify(discord)
+      } catch {
+        res.status(403).json({status: 'fail', message: 'Unauthorized'})
+        return
+      }
+      await delkey(discord.id, 'osu', 'connections');
+      res.send('connection removed');
       return
     }
     let discord;
@@ -20,19 +33,15 @@ export default async function (req, res, user, token) {
       return
     }
     // console.log(discord)
-    if (!discord.delete) {
-      const codereq = await fetch(`https://gitlab.com/oauth/token?client_id=${process.env.GITLAB_ID}&client_secret=${process.env.GITLAB_SECRET}&code=${req.query.code}&grant_type=authorization_code&redirect_uri=${encodeURIComponent(`${process.env.URL}/api/link/gitlab`)}`, {method: 'POST'})
-      const code = await codereq.json()
-      if (codereq.status !== 200) res.send(codereq.statusText)
-      const userreq = await fetch('https://gitlab.com/api/v4/user', { 
-          headers: new Headers({
-            'Authorization': `Bearer ${code.access_token}`,
-          })}
-      )
-      const user = await userreq.json()
-      await update(discord.id, { gitlab: { id: user.name, name: user.username, verified: true, type:'gitlab'}, id: discord.id }, 'connections');
-      } else {
-        await delkey(discord.id, 'gitlab', 'connections');
-      }
-      res.send('done')
-    }
+    const codereq = await fetch(`https://gitlab.com/oauth/token?client_id=${process.env.GITLAB_ID}&client_secret=${process.env.GITLAB_SECRET}&code=${req.query.code}&grant_type=authorization_code&redirect_uri=${encodeURIComponent(`${process.env.URL}/api/link/gitlab`)}`, {method: 'POST'})
+    const code = await codereq.json()
+    if (codereq.status !== 200) res.send(codereq.statusText)
+    const accreq = await fetch('https://gitlab.com/api/v4/user', { 
+        headers: new Headers({
+          'Authorization': `Bearer ${code.access_token}`,
+        })}
+    )
+    const acc = await accreq.json()
+    await update(discord.id, { gitlab: { id: acc.name, name: acc.username, verified: true, type:'gitlab'}, id: discord.id }, 'connections');
+    res.send('done')
+  }
