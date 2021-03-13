@@ -1,4 +1,4 @@
-import { update, delkey } from '../../../util/fauna';
+import { update } from '../../../util/fauna';
 import { encrypt, decrypt } from '../../../util/crypto';
 import verify from '../../../util/verify';
 
@@ -15,17 +15,6 @@ function oAuthToUUID(token) {
 
 export default async function (req, res, user, token) {
    if (req.method === 'GET') {
-      if (req.query.delete && user) {
-         try {
-            await verify({...user, token})
-         } catch (e) {
-            res.status(403).json({status: 'fail', message: 'Unauthorized'})//'Unauthorized'})
-            return
-         }
-         await delkey(discord.id, 'minecraft', 'connections');
-         res.send('done')
-         return
-      }
       if (!user && !req.query.state) {
          req.query.type = 'minecraft';
          await (await import('../auth')).default(req, res)
