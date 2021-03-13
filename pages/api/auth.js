@@ -3,7 +3,7 @@ import atob from 'atob';
 
 export default async function (req, res) {
     if (!req.query.code && req.query.type) {
-        res.redirect(`https://canary.discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_ID}&redirect_uri=${encodeURIComponent(`${process.env.URL}/api/auth`)}&response_type=code&state=${btoa(JSON.stringify({type: req.query.type, delete: req.query.delete}))}&scope=identify&prompt=none`)
+        res.redirect(`https://canary.discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_ID}&redirect_uri=${encodeURIComponent(`${process.env.URL}/api/auth`)}&response_type=code&state=${btoa(JSON.stringify(req.query))}&scope=identify&prompt=none`)
     } else {
         const codereq = await fetch(`https://canary.discord.com/api/oauth2/token`, {method: 'POST', body: new URLSearchParams({
             client_id: process.env.DISCORD_ID,
@@ -31,6 +31,6 @@ export default async function (req, res) {
         //res.json(user)
         //// console.log(codereq)
         const state = JSON.parse(atob(req.query.state))
-        await (await import(state.specialType ? `./${state.type}` : `./link/${state.type}`)).default({...req, query: {delete: state.delete}}, res, user, code.access_token)
+        await (await import(`./link/${state.type}`)).default({...req, query: {delete: state.delete}}, res, user, code.access_token, state)
     }
 }
