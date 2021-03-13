@@ -11,8 +11,9 @@ export default async function (req, res, user, token) {
       res.redirect(`https://gitlab.com/oauth/authorize?client_id=${process.env.GITLAB_ID}&redirect_uri=${encodeURIComponent(`${process.env.URL}/api/link/gitlab`)}&response_type=code&state=${encrypt(JSON.stringify({...user, token, delete: req.query.delete}))}&scope=read_user`)
       return
     }
+    let discord;
     try {
-      const discord = JSON.parse(decrypt(req.query.state))
+      discord = JSON.parse(decrypt(req.query.state))
       await verify(discord)
     } catch {
       res.status(403).json({status: 'fail', message: 'Unauthorized'})
