@@ -31,6 +31,6 @@ export default async function (req, res) {
         //res.json(user)
         //// console.log(codereq)
         const state = JSON.parse(atob(req.query.state))
-        await (await import(req.query.specialType ? `./${state.type}` : `./link/${state.type}`)).default({...req, query: {delete: state.delete}}, res, user, code.access_token)
+        await (await import(state.specialType ? `./${state.type}` : `./link/${state.type}`)).default({...req, query: {delete: state.delete}}, res, user, code.access_token)
     }
 }
