@@ -63,7 +63,7 @@ export default function MinecraftLinkPage() {
                 To connect, join
               <pre>
                 <code className = {styles.srv}>
-                  srv.mc-oauth.net:25565
+                  srv.mc-oauth.com:25565
                 </code>
               </pre>
                 in game and enter the 6-digit code.

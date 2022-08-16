@@ -3,7 +3,7 @@ import { encrypt, decrypt } from '../../../util/crypto';
 import verify from '../../../util/verify';
 
 function oAuthToUUID(token) {
-    return fetch('https://mc-oauth.net/api/api?token', {
+    return fetch('https://mc-oauth.com/api/api?token', {
        method: "GET",
        headers: {
           "token": token
